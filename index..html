@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DecodeLabs — AI Tech Company</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════
+BASE RESET + CSS VARIABLES
+Mobile-First Strategy (Project 2 ✅)
+═══════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #050810;
+  --surface:  #0a0e1a;
+  --card:     rgba(255,255,255,0.04);
+  --border:   rgba(255,255,255,0.08);
+  --blue:     #4f8ef7;
+  --purple:   #9b59f5;
+  --cyan:     #00d4ff;
+  --green:    #00e5a0;
+  --pink:     #f759ab;
+  --text:     #f0f0ff;
+  --muted:    #8892a4;
+  --white:    #ffffff;
+  /* Fluid typography with clamp() — Project 2 ✅ */
+  --fs-xs:    clamp(0.7rem,  1.5vw, 0.8rem);
+  --fs-sm:    clamp(0.82rem, 2vw,  0.95rem);
+  --fs-base:  clamp(0.95rem, 2.5vw, 1.05rem);
+  --fs-md:    clamp(1.1rem,  3vw,  1.3rem);
+  --fs-lg:    clamp(1.4rem,  4vw,  1.8rem);
+  --fs-xl:    clamp(2rem,    5vw,  3rem);
+  --fs-2xl:   clamp(2.5rem,  7vw,  4.5rem);
+  --r: 16px;
+  --gap: clamp(16px, 3vw, 28px);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  font-size: var(--fs-base);
+  line-height: 1.6;
+}
+
+img { max-width: 100%; display: block; }
+a  { text-decoration: none; color: inherit; }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 4px; }
+
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(79,142,247,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,142,247,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════
+ANIMATED GRADIENT ORBS
+═══════════════════════════════════════ */
+.orbs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.orb {
+  position: absolute; border-radius: 50%; filter: blur(100px);
+  animation: orbFloat 16s ease-in-out infinite;
+}
+.orb-1 { width: clamp(300px,40vw,600px); height: clamp(300px,40vw,600px); background: rgba(79,142,247,0.12); top: -15%; left: -10%; }
+.orb-2 { width: clamp(250px,35vw,500px); height: clamp(250px,35vw,500px); background: rgba(155,89,245,0.1); bottom: 10%; right: -10%; animation-delay: -6s; }
+.orb-3 { width: clamp(200px,25vw,350px); height: clamp(200px,25vw,350px); background: rgba(0,212,255,0.08); top: 40%; left: 40%; animation-delay: -11s; }
+@keyframes orbFloat {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%     { transform: translate(30px,-25px) scale(1.05); }
+  66%     { transform: translate(-20px,30px) scale(0.97); }
+}
+
+/* ═══════════════════════════════════════
+NAVBAR — Responsive Navigation (Project 2 ✅)
+═══════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: clamp(14px,2.5vw,20px) clamp(20px,5vw,60px);
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.4s;
+}
+nav.scrolled {
+  background: rgba(5,8,16,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+}
+
+
+.logo { display: flex; align-items: center; gap: 10px; z-index: 101; }
+.logo-box {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  display: grid; place-items: center; font-size: 18px;
+  box-shadow: 0 0 20px rgba(79,142,247,0.4);
+  flex-shrink: 0;
+}
+.logo-text {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  font-weight: 800; letter-spacing: 0.02em;
+}
+.logo-text span { color: var(--blue); }
+
+/* Desktop nav links */
+.nav-links {
+  display: none; /* mobile: hidden */
+  align-items: center; gap: clamp(20px,3vw,36px);
+}
+.nav-links a {
+  font-size: var(--fs-sm); font-weight: 500;
+  color: var(--muted); transition: color 0.2s;
+  letter-spacing: 0.04em;
+}
+.nav-links a:hover { color: var(--text); }
+
+/* CTA button */
+.nav-cta {
+  display: none; /* mobile: hidden */
+  padding: 9px 22px;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: white; border: none; border-radius: 30px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: var(--fs-sm); font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 18px rgba(79,142,247,0.3);
+}
+.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(79,142,247,0.45); }
+
+/* Hamburger — Mobile only (Project 2 ✅) */
+.hamburger {
+  display: flex; flex-direction: column; gap: 5px;
+  cursor: pointer; padding: 6px; z-index: 101;
+  min-width: 44px; min-height: 44px; /* Touch target 44px ✅ */
+  align-items: center; justify-content: center;
+}
+.hamburger span {
+  width: 22px; height: 2px;
+  background: var(--text); border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.22,0.68,0,1.2);
+  display: block;
+}
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+/* Mobile full-screen menu */
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 99;
+  background: rgba(5,8,16,0.97);
+  backdrop-filter: blur(24px);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 36px;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.22,0.68,0,1.1);
+}
+.mobile-menu.open { transform: none; }
+.mobile-menu a {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.8rem,6vw,2.5rem);
+  font-weight: 700; color: var(--text);
+  transition: color 0.2s; letter-spacing: 0.02em;
+}
+.mobile-menu a:hover { color: var(--blue); }
+.mobile-menu .mob-cta {
+  padding: 13px 36px;
+  background: linear-gradient(135deg,var(--blue),var(--purple));
+  border-radius: 50px; color: white;
+  font-size: 1rem; font-weight: 600;
+}
+
+/* Tablet & Desktop: show links, hide hamburger */
+@media (min-width: 768px) {
+  .nav-links { display: flex; }
+  .nav-cta   { display: block; }
+  .hamburger { display: none; }
+}
+
+/* HERO SECTION ═══════════════════════════════════════
+
+═══════════════════════════════════════ */
+.hero {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: clamp(100px,15vw,140px) clamp(20px,5vw,60px) clamp(60px,8vw,80px);
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(79,142,247,0.1);
+  border: 1px solid rgba(79,142,247,0.25);
+  padding: 7px 18px; border-radius: 30px;
+  font-size: var(--fs-xs); font-weight: 600;
+  color: var(--blue); letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 24px;
+  animation: fadeUp 0.7s 0.1s both;
+}
+.badge-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--blue);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: var(--fs-2xl);
+  font-weight: 800; line-height: 1.05;
+  margin-bottom: 20px;
+  animation: fadeUp 0.7s 0.25s both;
+}
+.hero-title .line2 {
+  background: linear-gradient(90deg, var(--blue), var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+}
+
+.hero-sub {
+  font-size: var(--fs-md);
+  color: var(--muted); line-height: 1.7;
+  max-width: min(600px, 90vw);
+  margin: 0 auto 36px;
+  font-weight: 300;
+  animation: fadeUp 0.7s 0.4s both;
+}
+
+.hero-btns {
+  display: flex; gap: 12px; justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeUp 0.7s 0.55s both;
+}
+.btn-primary {
+  padding: clamp(12px,2vw,15px) clamp(24px,4vw,36px);
+  background: linear-gradient(135deg,var(--blue),var(--purple));
+  color: white; border: none; border-radius: 50px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: var(--fs-sm); font-weight: 600;
+  cursor: pointer; transition: all 0.25s;
+  box-shadow: 0 6px 24px rgba(79,142,247,0.35);
+  min-height: 44px; /* Touch target ✅ */
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(79,142,247,0.5); }
+
+.btn-outline {
+  padding: clamp(12px,2vw,15px) clamp(24px,4vw,36px);
+  background: rgba(255,255,255,0.05);
+  color: var(--text); border: 1.5px solid var(--border);
+  border-radius: 50px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: var(--fs-sm); font-weight: 500;
+  cursor: pointer; transition: all 0.25s;
+  backdrop-filter: blur(8px);
+  min-height: 44px;
+}
+.btn-outline:hover { border-color: var(--blue); color: var(--blue); transform: translateY(-2px); }
+
+/* Hero stats */
+.hero-stats {
+  display: flex; gap: clamp(24px,4vw,48px);
+  justify-content: center; flex-wrap: wrap;
+  margin-top: 56px;
+  animation: fadeUp 0.7s 0.7s both;
+}
+.hero-stat { text-align: center; }
+.hero-stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: var(--fs-lg); font-weight: 800;
+  background: linear-gradient(135deg,var(--blue),var(--cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-stat-label { font-size: var(--fs-xs); color: var(--muted); margin-top: 3px; }
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute; bottom: 28px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+  color: var(--muted); font-size: var(--fs-xs);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  animation: fadeIn 1s 1.2s both;
+}
+.scroll-line {
+  width: 1px; height: 40px;
+  background: linear-gradient(to bottom, var(--blue), transparent);
+  animation: scrollAnim 2s ease-in-out infinite;
+}
+@keyframes scrollAnim { 0%,100%{opacity:0.4;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.2)} }
+
+@keyframes fadeUp  { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
+@keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+
+/* ═══════════════════════════════════════
+SECTION COMMONS
+═══════════════════════════════════════ */
+section {
+  position: relative; z-index: 1;
+  padding: clamp(60px,10vw,100px) clamp(20px,5vw,60px);
+}
+.sec-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: var(--fs-xs); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--blue); margin-bottom: 12px;
+}
+.sec-label::before { content:''; width:20px; height:1.5px; background:var(--blue); }
+.sec-title {
+  font-family: 'Syne', sans-serif;
+  font-size: var(--fs-xl); font-weight: 800;
+  line-height: 1.1; margin-bottom: 14px;
+}
+.sec-title span {
+  background: linear-gradient(90deg, var(--blue), var(--purple));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.sec-sub { font-size: var(--fs-base); color: var(--muted); max-width: 500px; line-height: 1.7; }
+.sec-header { text-align: center; margin-bottom: clamp(36px,6vw,56px); }
+.sec-header .sec-label { justify-content: center; }
+.sec-header .sec-sub { margin: 0 auto; }
+
+/* Reveal animation */
+.reveal { opacity:0; transform:translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.visible { opacity:1; transform:none; }
+.rd1{transition-delay:.08s} .rd2{transition-delay:.16s} .rd3{transition-delay:.24s} .rd4{transition-delay:.32s}
+
+/* ═══════════════════════════════════════
+SERVICES — CSS Grid Layout (Project 2 ✅)
+═══════════════════════════════════════ */
+.services { background: var(--surface); }
+
+/* Mobile-first: 1 column → tablet: 2 → desktop: 3 */
+.services-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile base ✅ */
+  gap: var(--gap);
+}
+@media (min-width: 600px) {
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .services-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.service-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: clamp(20px,3vw,28px);
+  transition: all 0.3s; cursor: pointer;
+  position: relative; overflow: hidden;
+}
+.service-card::before {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(135deg, rgba(79,142,247,0.05), transparent);
+  opacity:0; transition: opacity 0.3s;
+}
+.service-card:hover::before { opacity:1; }
+.service-card:hover {
+  border-color: rgba(79,142,247,0.35);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 48px rgba(79,142,247,0.12);
+}
+.service-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: grid; place-items: center; font-size: 22px;
+  margin-bottom: 18px; transition: transform 0.3s;
+}
+.service-card:hover .service-icon { transform: scale(1.1) rotate(-5deg); }
+.service-title {
+  font-family: 'Syne', sans-serif;
+  font-size: var(--fs-md); font-weight: 700; margin-bottom: 8px;
+}
+.service-desc { font-size: var(--fs-sm); color: var(--muted); line-height: 1.65; margin-bottom: 16px; }
+.service-link {
+  font-size: var(--fs-sm); font-weight: 600; color: var(--blue);
+  display: inline-flex; align-items: center; gap: 5px;
+  transition: gap 0.2s;
+}
+.service-card:hover .service-link { gap: 10px; }
+
+/* ═══════════════════════════════════════
+FEATURES / HOW IT WORKS
+═══════════════════════════════════════ */
+.features { background: var(--bg); }
+
+/* Alternating layout — grid (Project 2 ✅) */
+.feature-row {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile: stacked */
+  gap: clamp(32px,5vw,56px);
+  align-items: center;
+  margin-bottom: clamp(56px,8vw,80px);
+}
+.feature-row:last-child { margin-bottom: 0; }
+@media (min-width: 768px) {
+  .feature-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .feature-row.reverse .feature-visual { order: -1; }
+}
+
+.feature-visual {
+  border-radius: 20px; overflow: hidden;
+  background: var(--card); border: 1px solid var(--border);
+  padding: clamp(24px,4vw,36px);
+  min-height: clamp(240px,35vw,320px);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.feature-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 14px; border-radius: 20px;
+  font-size: var(--fs-xs); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 14px;
+}
+.feature-title {
+  font-family: 'Syne', sans-serif;
+  font-size: var(--fs-lg); font-weight: 800;
+  line-height: 1.15; margin-bottom: 14px;
+}
+.feature-desc { font-size: var(--fs-sm); color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+.feature-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.feature-list li {
+  display: flex; align-items: center; gap: 10px;
+  font-size: var(--fs-sm); color: var(--muted);
+}
+.feature-list li::before {
+  content: '✓'; width: 22px; height: 22px; border-radius: 6px;
+  background: rgba(0,229,160,0.12); color: var(--green);
+  display: grid; place-items: center; font-size: 11px; font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Animated code block inside feature visual */
+.code-block {
+  background: rgba(0,0,0,0.5); border-radius: 12px;
+  padding: 20px 22px; font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.65rem,1.5vw,0.78rem);
+  line-height: 1.8; width: 100%; border: 1px solid rgba(255,255,255,0.06);
+}
+.code-line { display: block; }
+.c-blue  { color: #4f8ef7; }
+.c-green { color: #00e5a0; }
+.c-pink  { color: #f759ab; }
+.c-muted { color: #506070; }
+.c-white { color: #e8e8f0; }
+.c-yellow{ color: #ffd166; }
+.cursor-blink { animation: blink 1s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* AI visual */
+.ai-visual {
+  position: relative; width: 100%;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.ai-node {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 12px 16px; display: flex; align-items: center; gap: 12px;
+  animation: aiPulse 3s ease-in-out infinite;
+}
+.ai-node:nth-child(2) { animation-delay: -1s; margin-left: 20px; }
+.ai-node:nth-child(3) { animation-delay: -2s; margin-left: 40px; }
+@keyframes aiPulse {
+  0%,100% { border-color: rgba(255,255,255,0.08); }
+  50%      { border-color: rgba(79,142,247,0.4); box-shadow: 0 0 16px rgba(79,142,247,0.12); }
+}
+.ai-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.ai-bar { height: 8px; border-radius: 4px; flex: 1; }
+
+
+/* ═══════════════════════════════════════
+TEAM SECTION — Grid + Flexbox (Project 2 ✅)
+═══════════════════════════════════════ */
+.team { background: var(--surface); }
+
+/* Grid for macro layout (Project 2 — Grid for layout) */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* CSS Grid auto-fit ✅ */
+  gap: var(--gap);
+}
+
+/* Flexbox for micro component layout (Project 2 — Flexbox for components) */
+.team-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); overflow: hidden;
+  transition: all 0.3s; cursor: pointer;
+  display: flex; flex-direction: column; /* Flexbox ✅ */
+}
+.team-card:hover { border-color: rgba(155,89,245,0.4); transform: translateY(-5px); box-shadow: 0 16px 40px rgba(155,89,245,0.12); }
+.team-avatar {
+  height: clamp(180px,25vw,220px);
+  background-size: cover; background-position: center top;
+  position: relative;
+}
+.team-avatar-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(5,8,16,0.7) 0%, transparent 50%);
+}
+.team-body { padding: clamp(16px,2.5vw,22px); flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.team-name { font-family: 'Syne', sans-serif; font-size: var(--fs-md); font-weight: 700; }
+.team-role { font-size: var(--fs-sm); color: var(--blue); font-weight: 500; }
+.team-bio  { font-size: var(--fs-sm); color: var(--muted); line-height: 1.6; flex:1; }
+.team-links { display: flex; gap: 8px; margin-top: 12px; }
+.team-link {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  display: grid; place-items: center; font-size: 14px;
+  cursor: pointer; transition: all 0.2s;
+  min-width: 44px; min-height: 44px; /* Touch target ✅ */
+}
+.team-link:hover { background: rgba(79,142,247,0.15); border-color: var(--blue); }
+
+
+
+/* ═══════════════════════════════════════
+TECH STACK SECTION
+═══════════════════════════════════════ */
+.stack { background: var(--bg); }
+.stack-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--gap);
+}
+.stack-item {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: clamp(16px,3vw,24px) 16px;
+  text-align: center; transition: all 0.3s; cursor: default;
+}
+.stack-item:hover { border-color: rgba(79,142,247,0.35); transform: translateY(-3px); }
+.stack-icon { font-size: clamp(1.6rem,3vw,2rem); margin-bottom: 8px; display: block; }
+.stack-name { font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
+
+/* ═══════════════════════════════════════
+TESTIMONIALS — Flexbox scroll
+═══════════════════════════════════════ */
+.testimonials { background: var(--surface); overflow: hidden; }
+.testi-wrapper { overflow: hidden; }
+.testi-track {
+  display: flex; gap: 20px;
+  animation: scrollLeft 28s linear infinite;
+}
+.testi-track:hover { animation-play-state: paused; }
+@keyframes scrollLeft { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.testi-card {
+  flex-shrink: 0; width: clamp(280px,40vw,360px);
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: clamp(18px,3vw,26px);
+}
+.testi-stars { color: #ffd166; font-size: 14px; letter-spacing: 2px; margin-bottom: 12px; }
+.testi-text { font-size: var(--fs-sm); color: var(--muted); line-height: 1.7; font-style: italic; margin-bottom: 16px; }
+.testi-author { display: flex; align-items: center; gap: 10px; }
+.testi-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--blue); }
+.testi-name { font-weight: 600; font-size: var(--fs-sm); }
+.testi-role { font-size: var(--fs-xs); color: var(--muted); }
+
+/* ═══════════════════════════════════════
+PRICING
+═══════════════════════════════════════ */
+.pricing { background: var(--bg); }
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
+}
+@media (min-width: 640px)  { .pricing-grid { grid-template-columns: repeat(2,1fr); } }
+@media (min-width: 1024px) { .pricing-grid { grid-template-columns: repeat(3,1fr); } }
+
+.price-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: clamp(24px,4vw,32px);
+  display: flex; flex-direction: column; gap: 4px;
+  transition: all 0.3s; position: relative;
+}
+.price-card.featured {
+  border-color: rgba(79,142,247,0.5);
+  background: rgba(79,142,247,0.06);
+  box-shadow: 0 20px 60px rgba(79,142,247,0.15);
+}
+.price-card:hover { transform: translateY(-4px); }
+.price-popular {
+  position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg,var(--blue),var(--purple));
+  color: white; font-size: var(--fs-xs); font-weight: 700;
+  padding: 4px 16px; border-radius: 20px; white-space: nowrap;
+}
+.price-plan { font-size: var(--fs-sm); color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.price-amount {
+  font-family: 'Syne', sans-serif;
+  font-size: var(--fs-xl); font-weight: 800; line-height: 1;
+  margin-bottom: 4px;
+}
+.price-period { font-size: var(--fs-sm); color: var(--muted); margin-bottom: 20px; }
+.price-features { list-style: none; display: flex; flex-direction: column; gap: 10px; flex: 1; margin-bottom: 24px; }
+.price-features li { display: flex; align-items: center; gap: 10px; font-size: var(--fs-sm); color: var(--muted); }
+.price-features li::before {
+  content:'✓'; width:18px; height:18px; border-radius:5px;
+  background: rgba(0,229,160,0.12); color: var(--green);
+  display:grid; place-items:center; font-size:10px; font-weight:700; flex-shrink:0;
+}
+.price-btn {
+  width:100%; padding: 13px;
+  background: linear-gradient(135deg,var(--blue),var(--purple));
+  color: white; border: none; border-radius: 10px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: var(--fs-sm); font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  min-height: 44px;
+}
+.price-btn.outline {
+  background: none; border: 1.5px solid var(--border); color: var(--text);
+}
+.price-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(79,142,247,0.3); }
+.price-btn.outline:hover { border-color: var(--blue); color: var(--blue); }
+
+/* ═══════════════════════════════════════
+CTA BANNER
+═══════════════════════════════════════ */
+.cta-banner {
+  background: linear-gradient(135deg,rgba(79,142,247,0.12),rgba(155,89,245,0.08));
+  border: 1px solid rgba(79,142,247,0.2);
+  border-radius: 24px;
+  padding: clamp(36px,6vw,56px);
+  text-align: center;
+  margin: 0 clamp(20px,5vw,60px);
+  position: relative; z-index: 1; overflow: hidden;
+}
+.cta-banner::before {
+  content:''; position:absolute; inset:0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%234f8ef7' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.cta-banner h2 { font-family:'Syne',sans-serif; font-size:var(--fs-xl); font-weight:800; margin-bottom:12px; }
+.cta-banner p  { font-size:var(--fs-base); color:var(--muted); max-width:500px; margin:0 auto 28px; }
+
+
+
+/* ═══════════════════════════════════════
+FOOTER
+═══════════════════════════════════════ */
+footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: clamp(48px,8vw,72px) clamp(20px,5vw,60px) clamp(24px,4vw,32px);
+  position: relative; z-index: 1;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile */
+  gap: clamp(28px,4vw,40px);
+  margin-bottom: clamp(36px,5vw,48px);
+}
+@media (min-width: 640px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1024px){ .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+
+.footer-brand p { font-size: var(--fs-sm); color: var(--muted); line-height: 1.7; margin: 12px 0 20px; max-width: 280px; }
+.footer-socials { display: flex; gap: 10px; }
+.footer-social-btn {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: var(--card); border: 1px solid var(--border);
+  display: grid; place-items: center; font-size: 15px;
+  cursor: pointer; transition: all 0.2s;
+  min-width: 44px; min-height: 44px;
+}
+.footer-social-btn:hover { background: rgba(79,142,247,0.15); border-color: var(--blue); }
+.footer-col h4 { font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--blue); margin-bottom: 16px; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.footer-col ul li a { font-size: var(--fs-sm); color: var(--muted); transition: color 0.2s; }
+.footer-col ul li a:hover { color: var(--text); }
+.footer-bottom {
+  border-top: 1px solid var(--border); padding-top: 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px; font-size: var(--fs-xs); color: var(--muted);
+}
+
+
+
+/* ═══════════════════════════════════════
+TOAST
+═══════════════════════════════════════ */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 999;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 20px; font-size: var(--fs-sm);
+  color: var(--text); box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  opacity: 0; transform: translateY(12px);
+  transition: all 0.3s; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: none; }
+.toast.ok   { border-color: var(--green); color: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- BG ORBS -->
+<div class="orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#services"      onclick="closeMob()">Services</a>
+  <a href="#features"      onclick="closeMob()">Features</a>
+  <a href="#team"          onclick="closeMob()">Team</a>
+  <a href="#pricing"       onclick="closeMob()">Pricing</a>
+  <a href="#" class="mob-cta" onclick="closeMob()">Get Started</a>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="logo">
+    <div class="logo-box">⚡</div>
+    <div class="logo-text">Decode<span>Labs</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#features">Features</a>
+    <a href="#team">Team</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#stack">Tech Stack</a>
+  </div>
+  <button class="nav-cta" onclick="showToast('🚀 Launching sign-up soon!','ok')">Get Started</button>
+  <div class="hamburger" id="hamburger" onclick="toggleMob()" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><div class="badge-dot"></div>AI-Powered Development Platform</div>
+  <h1 class="hero-title">
+    Build Smarter.<br>
+    <span class="line2">Deploy Faster with AI.</span>
+  </h1>
+  <p class="hero-sub">DecodeLabs transforms how teams build software — with AI assistance, responsive design systems, and real-time collaboration built for the modern web.</p>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">Start for Free →</button>
+    <button class="btn-outline" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">See How It Works</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">50K+</div><div class="hero-stat-label">Developers</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">99.9%</div><div class="hero-stat-label">Uptime SLA</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">200+</div><div class="hero-stat-label">AI Models</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">4.9★</div><div class="hero-stat-label">Rating</div></div>
+  </div>
+  <div class="scroll-indicator">scroll<div class="scroll-line"></div></div>
+</section>
+
+<!-- SERVICES -->
+<section class="services reveal" id="services">
+  <div class="sec-header reveal">
+    <div class="sec-label">What We Build</div>
+    <h2 class="sec-title">AI Services for <span>Modern Teams</span></h2>
+    <p class="sec-sub">Everything your engineering team needs to ship faster, smarter, and with more confidence.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-icon" style="background:rgba(79,142,247,0.12)">🤖</div>
+      <div class="service-title">AI Code Assistant</div>
+      <div class="service-desc">Context-aware code completion, bug detection, and automated refactoring powered by our custom LLM trained on 50M+ code repositories.</div>
+      <div class="service-link">Learn more →</div>
+    </div>
+    <div class="service-card reveal rd1">
+      <div class="service-icon" style="background:rgba(155,89,245,0.12)">📱</div>
+      <div class="service-title">Responsive Design Engine</div>
+      <div class="service-desc">Auto-generate mobile-first CSS with fluid typography, CSS Grid layouts, and breakpoint systems — export production-ready code instantly.</div>
+      <div class="service-link">Learn more →</div>
+    </div>
+    <div class="service-card reveal rd2">
+      <div class="service-icon" style="background:rgba(0,212,255,0.12)">⚡</div>
+      <div class="service-title">Edge Deployment</div>
+      <div class="service-desc">Deploy to 200+ global edge nodes in seconds. Zero-config CDN, automatic HTTPS, and instant rollbacks with our AI-powered deployment pipeline.</div>
+      <div class="service-link">Learn more →</div>
+    </div>
+    <div class="service-card reveal rd3">
+      <div class="service-icon" style="background:rgba(0,229,160,0.12)">🔍</div>
+      <div class="service-title">AI Code Review</div>
+      <div class="service-desc">Automated pull request reviews that catch security vulnerabilities, performance issues, and style inconsistencies before they reach production.</div>
+      <div class="service-link">Learn more →</div>
+    </div>
+    <div class="service-card reveal rd1">
+      <div class="service-icon" style="background:rgba(247,89,171,0.12)">📊</div>
+      <div class="service-title">Analytics & Monitoring</div>
+      <div class="service-desc">Real-time performance monitoring with AI anomaly detection. Get alerted before users experience issues with predictive error tracking.</div>
+      <div class="service-link">Learn more →</div>
+    </div>
+    <div class="service-card reveal rd2">
+      <div class="service-icon" style="background:rgba(255,209,102,0.12)">🔐</div>
+      <div class="service-title">Security Scanner</div>
+      <div class="service-desc">Continuous dependency scanning, SAST/DAST integration, and AI-powered vulnerability remediation with one-click patches.</div>
+      <div class="service-link">Learn more →</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+
+  <!-- Feature 1 -->
+  <div class="feature-row reveal">
+    <div class="feature-content">
+      <div class="feature-tag" style="background:rgba(79,142,247,0.1);color:var(--blue)">🤖 AI Engine</div>
+      <h3 class="feature-title">Write Code 10× Faster with Inline AI</h3>
+      <p class="feature-desc">Our AI assistant understands your entire codebase context — not just the current file. Get suggestions that actually fit your architecture.</p>
+      <ul class="feature-list">
+        <li>Multi-file context awareness</li>
+        <li>Framework-specific patterns (React, Vue, Next.js)</li>
+        <li>Auto-complete with 94% accuracy</li>
+        <li>Inline documentation generation</li>
+      </ul>
+    </div>
+    <div class="feature-visual reveal rd1">
+      <div class="code-block">
+        <span class="code-line"><span class="c-muted">// DecodeLabs AI — Context Aware</span></span>
+        <span class="code-line"><span class="c-blue">function</span> <span class="c-green">buildResponsiveLayout</span><span class="c-white">() {</span></span>
+        <span class="code-line">  <span class="c-blue">const</span> <span class="c-yellow">grid</span> <span class="c-white">= {</span></span>
+        <span class="code-line">    <span class="c-green">mobile</span><span class="c-white">:  </span><span class="c-pink">'1fr'</span><span class="c-white">,</span></span>
+        <span class="code-line">    <span class="c-green">tablet</span><span class="c-white">:  </span><span class="c-pink">'repeat(2,1fr)'</span><span class="c-white">,</span></span>
+        <span class="code-line">    <span class="c-green">desktop</span><span class="c-white">: </span><span class="c-pink">'repeat(3,1fr)'</span></span>
+        <span class="code-line">  <span class="c-white">};</span></span>
+        <span class="code-line">  <span class="c-blue">return</span> <span class="c-green">applyMediaQueries</span><span class="c-white">(grid);</span></span>
+        <span class="code-line"><span class="c-white">}<span class="cursor-blink">|</span></span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 2 -->
+  <div class="feature-row reverse reveal">
+    <div class="feature-content">
+      <div class="feature-tag" style="background:rgba(155,89,245,0.1);color:var(--purple)">📐 Design System</div>
+      <h3 class="feature-title">Responsive-First, Always</h3>
+      <p class="feature-desc">Every component we generate follows mobile-first strategy — fluid typography with clamp(), CSS Grid for layouts, Flexbox for components.</p>
+      <ul class="feature-list">
+        <li>Mobile-First base CSS automatically</li>
+        <li>Fluid clamp() typography system</li>
+        <li>Breakpoints: 480px, 768px, 1024px</li>
+        <li>Container Queries for future-proofing</li>
+      </ul>
+    </div>
+    <div class="feature-visual reveal rd1">
+      <div class="ai-visual">
+        <div class="ai-node"><div class="ai-dot" style="background:var(--blue)"></div><div class="ai-bar" style="background:linear-gradient(90deg,var(--blue),transparent);width:80%"></div><span style="font-size:0.7rem;color:var(--muted)">Mobile 320px</span></div>
+        <div class="ai-node"><div class="ai-dot" style="background:var(--purple)"></div><div class="ai-bar" style="background:linear-gradient(90deg,var(--purple),transparent);width:60%"></div><span style="font-size:0.7rem;color:var(--muted)">Tablet 768px</span></div>
+        <div class="ai-node"><div class="ai-dot" style="background:var(--cyan)"></div><div class="ai-bar" style="background:linear-gradient(90deg,var(--cyan),transparent);width:45%"></div><span style="font-size:0.7rem;color:var(--muted)">Desktop 1024px</span></div>
+        <div style="text-align:center;padding:10px;font-size:0.72rem;color:var(--muted)">Seamless Integration ✓</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- TEAM -->
+<section class="team reveal" id="team">
+  <div class="sec-header">
+    <div class="sec-label">Our Team</div>
+    <h2 class="sec-title">Built by <span>World-Class Engineers</span></h2>
+    <p class="sec-sub">A passionate team of developers, designers, and AI researchers committed to transforming how software is built.</p>
+  </div>
+  <div class="team-grid">
+    <div class="team-card reveal">
+      <div class="team-avatar" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80')"><div class="team-avatar-overlay"></div></div>
+      <div class="team-body">
+        <div class="team-name">Arjun Sharma</div>
+        <div class="team-role">CEO & Co-Founder</div>
+        <div class="team-bio">Former Google Brain researcher with 12 years in AI/ML. Led development of 3 production LLMs used by 10M+ users.</div>
+        <div class="team-links">
+          <div class="team-link" title="LinkedIn">💼</div>
+          <div class="team-link" title="GitHub">💻</div>
+          <div class="team-link" title="Twitter">🐦</div>
+        </div>
+      </div>
+    </div>
+    <div class="team-card reveal rd1">
+      <div class="team-avatar" style="background-image:url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=80')"><div class="team-avatar-overlay"></div></div>
+      <div class="team-body">
+        <div class="team-name">Priya Nair</div>
+        <div class="team-role">CTO & Head of AI</div>
+        <div class="team-bio">MIT CS PhD. Architected the responsive AI engine powering DecodeLabs' code assistant across 200+ frameworks.</div>
+        <div class="team-links">
+          <div class="team-link">💼</div><div class="team-link">💻</div><div class="team-link">🐦</div>
+        </div>
+      </div>
+    </div>
+    <div class="team-card reveal rd2">
+      <div class="team-avatar" style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80')"><div class="team-avatar-overlay"></div></div>
+      <div class="team-body">
+        <div class="team-name">Rahul Menon</div>
+        <div class="team-role">Lead Frontend Engineer</div>
+        <div class="team-bio">CSS Grid & responsive design specialist. Author of "The Art of Fluidity" — a guide on mobile-first development.</div>
+        <div class="team-links">
+          <div class="team-link">💼</div><div class="team-link">💻</div><div class="team-link">🐦</div>
+        </div>
+      </div>
+    </div>
+    <div class="team-card reveal rd3">
+      <div class="team-avatar" style="background-image:url('https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&auto=format&fit=crop&q=80')"><div class="team-avatar-overlay"></div></div>
+      <div class="team-body">
+        <div class="team-name">Sneha Kapoor</div>
+        <div class="team-role">Head of Design</div>
+        <div class="team-bio">Ex-Figma designer. Built the glassmorphism design system used across DecodeLabs' entire product suite.</div>
+        <div class="team-links">
+          <div class="team-link">💼</div><div class="team-link">🎨</div><div class="team-link">🐦</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section class="stack reveal" id="stack">
+  <div class="sec-header">
+    <div class="sec-label">Technology</div>
+    <h2 class="sec-title">Our <span>Tech Stack</span></h2>
+    <p class="sec-sub">Built on the most reliable, scalable, and modern technologies available.</p>
+  </div>
+  <div class="stack-grid">
+    <div class="stack-item reveal"><span class="stack-icon">⚛️</span><div class="stack-name">React</div></div>
+    <div class="stack-item reveal rd1"><span class="stack-icon">🟦</span><div class="stack-name">TypeScript</div></div>
+    <div class="stack-item reveal rd2"><span class="stack-icon">🔥</span><div class="stack-name">Firebase</div></div>
+    <div class="stack-item reveal rd3"><span class="stack-icon">🎨</span><div class="stack-name">Tailwind CSS</div></div>
+    <div class="stack-item reveal rd1"><span class="stack-icon">🟢</span><div class="stack-name">Node.js</div></div>
+    <div class="stack-item reveal rd2"><span class="stack-icon">🍃</span><div class="stack-name">MongoDB</div></div>
+    <div class="stack-item reveal rd3"><span class="stack-icon">▲</span><div class="stack-name">Next.js</div></div>
+    <div class="stack-item reveal"><span class="stack-icon">🐳</span><div class="stack-name">Docker</div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" style="padding:clamp(60px,10vw,100px) 0">
+  <div class="sec-header reveal" style="padding:0 clamp(20px,5vw,60px)">
+    <div class="sec-label">Testimonials</div>
+    <h2 class="sec-title">Loved by <span>Developers</span></h2>
+  </div>
+  <div class="testi-wrapper">
+    <div class="testi-track">
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"DecodeLabs' AI assistant understood our entire React codebase from day one. Refactoring a 50,000-line app took hours, not weeks."</div><div class="testi-author"><img class="testi-avatar" src="https://i.pravatar.cc/80?img=11" alt=""/><div><div class="testi-name">James Wilson</div><div class="testi-role">Senior Dev, Stripe</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"The responsive design engine saved our team 3 weeks. Mobile-first CSS Grid and fluid typography — all generated in seconds."</div><div class="testi-author"><img class="testi-avatar" src="https://i.pravatar.cc/80?img=21" alt=""/><div><div class="testi-name">Aisha Patel</div><div class="testi-role">Frontend Lead, Figma</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Best AI code review I've used. Caught a critical XSS vulnerability that our team's manual review missed for 2 sprints."</div><div class="testi-author"><img class="testi-avatar" src="https://i.pravatar.cc/80?img=31" alt=""/><div><div class="testi-name">Carlos Martinez</div><div class="testi-role">Security Eng, GitHub</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Our deployment time dropped from 45 minutes to 90 seconds. The edge network is blazing fast and the zero-config SSL is a dream."</div><div class="testi-author"><img class="testi-avatar" src="https://i.pravatar.cc/80?img=41" alt=""/><div><div class="testi-name">Sophie Chen</div><div class="testi-role">DevOps Lead, Shopify</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"As an intern at DecodeLabs, I built my first fully responsive website using their platform. The Project 2 training kit was incredible!"</div><div class="testi-author"><img class="testi-avatar" src="https://i.pravatar.cc/80?img=51" alt=""/><div><div class="testi-name">Riya Gupta</div><div class="testi-role">Frontend Intern, DecodeLabs</div></div></div></div>
+      <!-- Duplicate for infinite scroll -->
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"DecodeLabs' AI assistant understood our entire React codebase from day one. Refactoring a 50,000-line app took hours, not weeks."</div><div class="testi-author"><img class="testi-avatar" src="https://i.pravatar.cc/80?img=11" alt=""/><div><div class="testi-name">James Wilson</div><div class="testi-role">Senior Dev, Stripe</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"The responsive design engine saved our team 3 weeks. Mobile-first CSS Grid and fluid typography — all generated in seconds."</div><div class="testi-author"><img class="testi-avatar" src="https://i.pravatar.cc/80?img=21" alt=""/><div><div class="testi-name">Aisha Patel</div><div class="testi-role">Frontend Lead, Figma</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Best AI code review I've used. Caught a critical XSS vulnerability that our team's manual review missed for 2 sprints."</div><div class="testi-author"><img class="testi-avatar" src="https://i.pravatar.cc/80?img=31" alt=""/><div><div class="testi-name">Carlos Martinez</div><div class="testi-role">Security Eng, GitHub</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing reveal" id="pricing">
+  <div class="sec-header">
+    <div class="sec-label">Pricing</div>
+    <h2 class="sec-title">Simple, <span>Transparent Pricing</span></h2>
+    <p class="sec-sub">Start free, scale as you grow. No hidden fees, cancel anytime.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="price-plan">Starter</div>
+      <div class="price-amount">Free</div>
+      <div class="price-period">forever · no card needed</div>
+      <ul class="price-features">
+        <li>5 AI code completions/day</li>
+        <li>1 responsive layout export</li>
+        <li>Community support</li>
+        <li>Basic deployment (1 project)</li>
+      </ul>
+      <button class="price-btn outline" onclick="showToast('✓ Free plan activated!','ok')">Get Started Free</button>
+    </div>
+    <div class="price-card featured reveal rd1">
+      <div class="price-popular">Most Popular</div>
+      <div class="price-plan">Pro</div>
+      <div class="price-amount">$29 <span style="font-size:1rem;font-weight:400;color:var(--muted)">/mo</span></div>
+      <div class="price-period">billed monthly</div>
+      <ul class="price-features">
+        <li>Unlimited AI completions</li>
+        <li>Unlimited responsive exports</li>
+        <li>Priority email support</li>
+        <li>10 production deployments</li>
+        <li>AI code review on PRs</li>
+        <li>Analytics dashboard</li>
+      </ul>
+      <button class="price-btn" onclick="showToast('🚀 Redirecting to checkout...','ok')">Start Pro Trial</button>
+    </div>
+    <div class="price-card reveal rd2">
+      <div class="price-plan">Enterprise</div>
+      <div class="price-amount">$99 <span style="font-size:1rem;font-weight:400;color:var(--muted)">/mo</span></div>
+      <div class="price-period">per team · billed annually</div>
+      <ul class="price-features">
+        <li>Everything in Pro</li>
+        <li>Custom AI model fine-tuning</li>
+        <li>Dedicated success manager</li>
+        <li>Unlimited deployments</li>
+        <li>SSO + SAML</li>
+        <li>SLA 99.99% uptime</li>
+      </ul>
+      <button class="price-btn outline" onclick="showToast('📞 Sales team will contact you!','ok')">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner reveal">
+  <div class="sec-label" style="justify-content:center">Ready to Build?</div>
+  <h2>Start Your AI-Powered<br>Dev Journey Today</h2>
+  <p>Join 50,000+ developers who build responsive, beautiful software faster with DecodeLabs AI.</p>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+    <button class="btn-primary" onclick="showToast('🎉 Welcome to DecodeLabs!','ok')">Start for Free →</button>
+    <button class="btn-outline" onclick="showToast('📅 Demo scheduled!','ok')">Schedule a Demo</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo"><div class="logo-box">⚡</div><div class="logo-text">Decode<span>Labs</span></div></div>
+      <p>Building the AI infrastructure for the next generation of software developers. Powered by DecodeLabs, Greater Lucknow, India.</p>
+      <div class="footer-socials">
+        <div class="footer-social-btn">📘</div>
+        <div class="footer-social-btn">🐦</div>
+        <div class="footer-social-btn">💼</div>
+        <div class="footer-social-btn">📺</div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#">AI Code Assistant</a></li>
+        <li><a href="#">Responsive Engine</a></li>
+        <li><a href="#">Edge Deployment</a></li>
+        <li><a href="#">Code Review AI</a></li>
+        <li><a href="#">Analytics</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Training Kits</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">Documentation</a></li>
+        <li><a href="#">MDN Web Docs</a></li>
+        <li><a href="#">CSS-Tricks</a></li>
+        <li><a href="#">CanIUse.com</a></li>
+        <li><a href="#">Status Page</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 DecodeLabs · All Rights Reserved · Batch 2026</span>
+    <span>📍 Greater Lucknow, India · decodelabs.tech@gmail.com</span>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── NAVBAR SCROLL
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60));
+
+// ── HAMBURGER MENU (Responsive Nav — Project 2 ✅)
+const ham = document.getElementById('hamburger');
+const mob = document.getElementById('mobileMenu');
+window.toggleMob = () => { ham.classList.toggle('open'); mob.classList.toggle('open'); document.body.style.overflow = mob.classList.contains('open') ? 'hidden' : ''; };
+window.closeMob  = () => { ham.classList.remove('open'); mob.classList.remove('open'); document.body.style.overflow = ''; };
+
+// ── SCROLL REVEAL (Project 2 — CSS technique)
+const revEls = document.querySelectorAll('.reveal');
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+revEls.forEach(el => revObs.observe(el));
+
+// ── TOAST
+window.showToast = (msg, type='') => {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show ' + type;
+  clearTimeout(t._t); t._t = setTimeout(() => t.className = 'toast', 3500);
+};
+
+// ── COUNTER ANIMATION (hero stats)
+function animateCounters() {
+  document.querySelectorAll('.hero-stat-num').forEach(el => {
+    const text = el.textContent;
+    const num = parseFloat(text.replace(/[^0-9.]/g, ''));
+    const suffix = text.replace(/[0-9.]/g, '');
+    if(isNaN(num)) return;
+    let start = 0, duration = 1800;
+    const step = timestamp => {
+      if(!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = (num < 10 ? (num * ease).toFixed(1) : Math.round(num * ease)) + suffix;
+      if(progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}
+// Trigger on page load
+setTimeout(animateCounters, 800);
+</script>
+</body>
+</html>
